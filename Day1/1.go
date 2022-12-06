@@ -15,36 +15,23 @@ func main() {
 		log.Fatalf("could not read input file: %s", err)
 	}
 
-	str1 := string(input[:])                                              //ToString
-	array1 := strings.Split(strings.ReplaceAll(str1, "\r\n", "\n"), "\n") //ToArray
+	slice := strings.TrimRight(strings.ReplaceAll(string(input), "\r", ""), "\n") //ToArray
 
-	var sumedUpArray []int
-	calSum := 0
-	for i := 0; i <= len(array1)-1; i++ {
-		if array1[i] != "" {
-			temp, err := strconv.Atoi(array1[i]) //String to int
-			if err != nil {
-				log.Fatalf("invalid input: %s", err)
+	var mostKcal int
+	for _, elfFood := range strings.Split(slice, "\n\n") { // cada elfo esta separado por dos saltos de linea
+		var totalElfKcal int
+		for _, foodItem := range strings.Split(elfFood, "\n") {
+			if kcal, err := strconv.Atoi(foodItem); err == nil {
+				totalElfKcal += kcal
+			} else {
+				fmt.Println()
+				panic(err) // esto en una app de verdad es prohibido
 			}
-
-			calSum = calSum + temp
-		} else {
-			sumedUpArray = append(sumedUpArray, calSum)
-			calSum = 0
+		}
+		if totalElfKcal > mostKcal {
+			mostKcal = totalElfKcal
 		}
 	}
 
-	var temp, largerNumber int
-	for _, element := range sumedUpArray {
-		if element > temp {
-			temp = element
-			largerNumber = temp
-		}
-	}
-
-	fmt.Println(largerNumber)
+	fmt.Println(mostKcal)
 }
-
-// func printSlice(s []int) {
-// 	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
-// }
