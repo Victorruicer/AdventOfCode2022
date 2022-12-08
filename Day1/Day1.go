@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	// part1()
+	part1()
 	part2()
 }
 
-
-func part1(){
+func part1() {
 	//Check if the file exists and read it
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
@@ -42,7 +42,7 @@ func part1(){
 	fmt.Println("Part 1 answer is: " + strconv.Itoa(mostKcal))
 }
 
-func part2(){
+func part2() {
 	//Check if the file exists and read it
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
@@ -51,7 +51,7 @@ func part2(){
 
 	slice := strings.TrimRight(strings.ReplaceAll(string(input), "\r", ""), "\n") //ToArray
 
-	var mostKcal int
+	var sumedUpKcal []int
 	for _, elfFood := range strings.Split(slice, "\n\n") {
 		var totalElfKcal int
 		for _, foodItem := range strings.Split(elfFood, "\n") {
@@ -62,10 +62,18 @@ func part2(){
 				panic(err) // just for tests
 			}
 		}
-		if totalElfKcal > mostKcal{
-			mostKcal = totalElfKcal
-		}
+		sumedUpKcal = append(sumedUpKcal, totalElfKcal)
 	}
 
-	fmt.Println("Part 2 answer is: " + strconv.Itoa(mostKcal))
+	//Ordey by descending
+	sort.Slice(sumedUpKcal, func(i, j int) bool {
+		return sumedUpKcal[i] > sumedUpKcal[j]
+	})
+
+	var threeMostKcal int
+	for i := 0; i < 3; i++ {
+		threeMostKcal += sumedUpKcal[i]
+	}
+
+	fmt.Println("Part 2 answer is: " + strconv.Itoa(threeMostKcal))
 }
